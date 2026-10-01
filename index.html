@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Finance Tracker</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     PIN SETUP SCREEN
+================================================== -->
+
+<section id="setupScreen" class="auth-screen">
+
+    <div class="auth-card">
+
+        <div class="app-logo">💰</div>
+
+        <h1>Student Finance</h1>
+
+        <p>
+            Create your personal finance tracker
+        </p>
+
+
+        <form id="setupForm">
+
+            <label>Your Name</label>
+
+            <input
+                type="text"
+                id="setupName"
+                placeholder="Enter your name"
+                required
+            >
+
+
+            <label>Create 4-Digit PIN</label>
+
+            <input
+                type="password"
+                id="setupPin"
+                placeholder="••••"
+                maxlength="4"
+                inputmode="numeric"
+                required
+            >
+
+
+            <label>Confirm PIN</label>
+
+            <input
+                type="password"
+                id="confirmPin"
+                placeholder="••••"
+                maxlength="4"
+                inputmode="numeric"
+                required
+            >
+
+
+            <button type="submit">
+                Create Account →
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     LOGIN SCREEN
+================================================== -->
+
+<section id="loginScreen" class="auth-screen hidden">
+
+    <div class="auth-card">
+
+        <div class="app-logo">🔐</div>
+
+        <h1>Welcome Back</h1>
+
+        <p>
+            Enter your PIN to access your finance tracker.
+        </p>
+
+
+        <form id="loginForm">
+
+            <label>Enter PIN</label>
+
+            <input
+                type="password"
+                id="loginPin"
+                placeholder="••••"
+                maxlength="4"
+                inputmode="numeric"
+                required
+            >
+
+
+            <button type="submit">
+                Unlock 🔓
+            </button>
+
+        </form>
+
+
+        <p
+            id="loginError"
+            class="error-message"
+        ></p>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     MAIN APP
+================================================== -->
+
+<div id="app" class="app hidden">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <span>💰</span>
+
+            <h2>
+                Student Finance
+            </h2>
+
+        </div>
+
+
+        <nav>
+
+            <button
+                class="nav-item active"
+                data-page="dashboardPage"
+            >
+                🏠 Dashboard
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="expensesPage"
+            >
+                💸 Expenses
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="incomePage"
+            >
+                💰 Income
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="debtPage"
+            >
+                🤝 Debt
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="analysisPage"
+            >
+                📊 Analysis
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="budgetPage"
+            >
+                🎯 Budget
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="goalsPage"
+            >
+                🏆 Savings Goals
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="calendarPage"
+            >
+                📅 Calendar
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="feedbackPage"
+            >
+                💬 Feedback
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="profilePage"
+            >
+                👤 Profile
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="aiPage"
+            >
+            ✨ Finance AI
+            </button>
+
+        </nav>
+
+
+        <button
+            id="lockButton"
+            class="lock-button"
+        >
+            🔒 Lock App
+        </button>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- ==========================================
+             DASHBOARD
+        =========================================== -->
+
+        <section
+            id="dashboardPage"
+            class="content-page"
+        >
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Hello,
+                        <span id="dashboardName">
+                            Student
+                        </span>
+                        👋
+                    </h1>
+
+                    <p>
+                        Here's your financial overview.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY CARDS -->
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon">
+                        💰
+                    </div>
+
+                    <p>
+                        Balance
+                    </p>
+
+                    <h2 id="balance">
+                        ₹0
+                    </h2>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon">
+                        📈
+                    </div>
+
+                    <p>
+                        Total Income
+                    </p>
+
+                    <h2 id="totalIncome">
+                        ₹0
+                    </h2>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon">
+                        📉
+                    </div>
+
+                    <p>
+                        Total Expenses
+                    </p>
+
+                    <h2 id="totalExpenses">
+                        ₹0
+                    </h2>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon">
+                        🤝
+                    </div>
+
+                    <p>
+                        Money Lent
+                    </p>
+
+                    <h2 id="totalDebt">
+                        ₹0
+                    </h2>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="dashboard-highlight-grid">
+                <div class="section-card mini-stat-card">
+                    <div class="mini-stat-icon">💎</div>
+                    <div>
+                        <span>Savings Rate</span>
+                        <strong id="savingsRate">0%</strong>
+                        <small id="savingsMessage">Add income and expenses to see your rate.</small>
+                    </div>
+                </div>
+                <div class="section-card mini-stat-card">
+                    <div class="mini-stat-icon">🎯</div>
+                    <div>
+                        <span>Monthly Budget</span>
+                        <strong id="dashboardBudget">Not set</strong>
+                        <small id="budgetMessage">Set a budget to track your progress.</small>
+                    </div>
+                </div>
+                <div class="section-card mini-stat-card">
+                    <div class="mini-stat-icon">🔥</div>
+                    <div>
+                        <span>Finance Streak</span>
+                        <strong id="savingStreak">0 days</strong>
+                        <small>Days you stayed within your daily target.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-chart-grid">
+                <div class="section-card chart-card">
+                    <div class="card-heading-row">
+                        <div>
+                            <h2>Income vs Expenses</h2>
+                            <p class="muted">Your overall money flow</p>
+                        </div>
+                    </div>
+                    <div class="chart-wrap"><canvas id="incomeExpenseChart"></canvas></div>
+                </div>
+                <div class="section-card chart-card">
+                    <div class="card-heading-row">
+                        <div>
+                            <h2>Spending by Category</h2>
+                            <p class="muted">Where your money goes</p>
+                        </div>
+                    </div>
+                    <div class="chart-wrap"><canvas id="categoryChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- PERIOD SUMMARY -->
+
+            <div class="section-card">
+
+                <h2>
+                    Finance Overview
+                </h2>
+
+
+                <div class="period-grid">
+
+
+                    <div>
+
+                        <span>
+                            Today
+                        </span>
+
+                        <strong id="todayExpense">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            This Week
+                        </span>
+
+                        <strong id="weekExpense">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            This Month
+                        </span>
+
+                        <strong id="monthExpense">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="section-card">
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+
+                <div class="quick-actions">
+
+                    <button
+                        class="quick expense-action"
+                        data-page="expensesPage"
+                    >
+                        ➖ Add Expense
+                    </button>
+
+
+                    <button
+                        class="quick income-action"
+                        data-page="incomePage"
+                    >
+                        ➕ Add Income
+                    </button>
+
+
+                    <button
+                        class="quick debt-action"
+                        data-page="debtPage"
+                    >
+                        🤝 Add Debt
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT TRANSACTIONS -->
+
+            <div class="section-card">
+
+                <h2>
+                    Recent Activity
+                </h2>
+
+                <div id="recentActivity">
+
+                    <p class="empty">
+                        No transactions yet.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             EXPENSES
+        =========================================== -->
+
+        <section
+            id="expensesPage"
+            class="content-page hidden"
+        >
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        💸 Expenses
+                    </h1>
+
+                    <p>
+                        Record where your money goes.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card">
+
+                <form id="expenseForm">
+
+
+                    <label>
+                        Expense Category
+                    </label>
+
+
+                    <select
+                        id="expenseCategory"
+                        required
+                    >
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option>
+                            Transport
+                        </option>
+
+                        <option>
+                            Shopping
+                        </option>
+
+                        <option>
+                            Food
+                        </option>
+
+                        <option>
+                            Health
+                        </option>
+
+                        <option>
+                            Education
+                        </option>
+
+                        <option>
+                            Entertainment
+                        </option>
+
+                        <option>
+                            Accommodation
+                        </option>
+
+                        <option>
+                            Bills
+                        </option>
+
+                        <option>
+                            Other
+                        </option>
+
+                    </select>
+
+
+                    <label>
+                        Amount
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="expenseAmount"
+                        placeholder="₹ Amount"
+                        min="1"
+                        required
+                    >
+
+
+                    <label>
+                        Date
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="expenseDate"
+                        required
+                    >
+
+
+                    <label>
+                        Description
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="expenseDescription"
+                        placeholder="Example: College lunch"
+                    >
+
+
+                    <button type="submit">
+                        Save Expense
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+
+            <div class="section-card">
+                <div class="card-heading-row">
+                    <div>
+                        <h2>Expense History</h2>
+                        <p class="muted">Search, filter and remove your records.</p>
+                    </div>
+                </div>
+                <div class="filter-grid">
+                    <input id="expenseSearch" type="search" placeholder="🔍 Search category or description">
+                    <select id="expenseFilterCategory">
+                        <option value="">All categories</option>
+                        <option>Transport</option><option>Shopping</option><option>Food</option>
+                        <option>Health</option><option>Education</option><option>Entertainment</option>
+                        <option>Accommodation</option><option>Bills</option><option>Other</option>
+                    </select>
+                    <select id="expenseSort">
+                        <option value="date-desc">Newest first</option>
+                        <option value="date-asc">Oldest first</option>
+                        <option value="amount-desc">Highest amount</option>
+                        <option value="amount-asc">Lowest amount</option>
+                    </select>
+                </div>
+                <div id="expenseHistory" class="transaction-list"></div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             INCOME
+        =========================================== -->
+
+        <section
+            id="incomePage"
+            class="content-page hidden"
+        >
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        💰 Income
+                    </h1>
+
+                    <p>
+                        Record money you receive.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card">
+
+                <form id="incomeForm">
+
+
+                    <label>
+                        Income Category
+                    </label>
+
+
+                    <select
+                        id="incomeCategory"
+                        required
+                    >
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option>
+                            Business Revenue
+                        </option>
+
+                        <option>
+                            Rental Income
+                        </option>
+
+                        <option>
+                            Salary
+                        </option>
+
+                        <option>
+                            Freelance
+                        </option>
+
+                        <option>
+                            Consulting
+                        </option>
+
+                        <option>
+                            Other Income
+                        </option>
+
+                    </select>
+
+
+                    <label>
+                        Amount
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="incomeAmount"
+                        placeholder="₹ Amount"
+                        min="1"
+                        required
+                    >
+
+
+                    <label>
+                        Date
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="incomeDate"
+                        required
+                    >
+
+
+                    <label>
+                        Description
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="incomeDescription"
+                        placeholder="Example: Freelance project"
+                    >
+
+
+                    <button type="submit">
+                        Save Income
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             DEBT
+        =========================================== -->
+
+        <section
+            id="debtPage"
+            class="content-page hidden"
+        >
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        🤝 Money Lent
+                    </h1>
+
+                    <p>
+                        Keep track of money others owe you.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card">
+
+                <form id="debtForm">
+
+
+                    <label>
+                        Contact Person Name
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="debtPerson"
+                        placeholder="Example: Rahul"
+                        required
+                    >
+
+
+                    <label>
+                        Phone Number
+                    </label>
+
+
+                    <input
+                        type="tel"
+                        id="debtPhone"
+                        placeholder="Example: 9876543210"
+                        required
+                    >
+
+
+                    <label>
+                        Amount
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="debtAmount"
+                        placeholder="₹ Amount"
+                        min="1"
+                        required
+                    >
+
+
+                    <label>
+    📅 Given Date
+</label>
+
+<input
+    type="date"
+    id="debtDate"
+    required
+>
+
+<label>
+    📅 Due Date
+</label>
+
+<input
+    type="date"
+    id="debtDueDate"
+>
+
+<label>
+    💵 Returned Amount
+</label>
+
+<input
+    type="number"
+    id="debtReturnedAmount"
+    placeholder="₹ Amount returned"
+    min="0"
+    value="0"
+>
+
+<label>📅 Returned Date</label>
+<input type="date" id="debtReturnedDate">
+
+<label>⏰ Returned Time</label>
+<input type="time" id="debtReturnedTime">
+
+<label>📝 Reason</label>
+<input type="text" id="debtReason" placeholder="Example: College expenses">
+>
+                        type="text"
+                        id="debtReason"
+                        placeholder="Example: College expenses"
+                    >
+
+
+                    <button type="submit">
+                        Save Debt
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="section-card">
+
+                <h2>
+                    People Who Owe You
+                </h2>
+
+                <div id="debtList">
+
+                    <p class="empty">
+                        No debt records yet.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             ANALYSIS
+        =========================================== -->
+
+        <section
+            id="analysisPage"
+            class="content-page hidden"
+        >
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        📊 Finance Analysis
+                    </h1>
+
+                    <p>
+                        Understand your financial habits.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="analysis-grid">
+
+
+                <div class="analysis-card">
+
+                    <span>
+                        Today
+                    </span>
+
+                    <strong id="analysisToday">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="analysis-card">
+
+                    <span>
+                        Weekly
+                    </span>
+
+                    <strong id="analysisWeek">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="analysis-card">
+
+                    <span>
+                        Monthly
+                    </span>
+
+                    <strong id="analysisMonth">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="section-card">
+
+                <h2>
+                    Expense Categories
+                </h2>
+
+                <div id="categoryAnalysis">
+
+                    <p class="empty">
+                        Add expenses to see analysis.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             BUDGET
+        =========================================== -->
+        <section id="budgetPage" class="content-page hidden">
+            <div class="page-header">
+                <div>
+                    <h1>🎯 Smart Budget</h1>
+                    <p>Set a monthly limit and keep your spending under control.</p>
+                </div>
+            </div>
+            <div class="form-card">
+                <form id="budgetForm">
+                    <label>Monthly Budget</label>
+                    <input type="number" id="monthlyBudget" min="1" placeholder="Example: ₹10000" required>
+                    <button type="submit">Save Budget 🎯</button>
+                </form>
+            </div>
+            <div class="section-card budget-overview">
+                <div class="budget-top">
+                    <div><span>Spent this month</span><strong id="budgetSpent">₹0</strong></div>
+                    <div class="budget-remaining" id="budgetRemaining">Set a budget</div>
+                </div>
+                <div class="progress-track"><div id="budgetProgress" class="progress-fill"></div></div>
+                <p id="budgetAlert" class="budget-alert"></p>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SAVINGS GOALS
+        =========================================== -->
+        <section id="goalsPage" class="content-page hidden">
+            <div class="page-header">
+                <div>
+                    <h1>🏆 Savings Goals</h1>
+                    <p>Turn the things you want into achievable goals.</p>
+                </div>
+            </div>
+            <div class="form-card">
+                <form id="goalForm">
+                    <label>Goal Name</label>
+                    <input type="text" id="goalName" placeholder="Example: New MacBook" required>
+                    <label>Target Amount</label>
+                    <input type="number" id="goalTarget" min="1" placeholder="₹80000" required>
+                    <label>Amount Already Saved</label>
+                    <input type="number" id="goalSaved" min="0" placeholder="₹35000" value="0">
+                    <button type="submit">Create Savings Goal 🏆</button>
+                </form>
+            </div>
+            <div id="goalsList" class="goal-grid"></div>
+        </section>
+
+        <!-- ==========================================
+             CALENDAR
+        =========================================== -->
+        <section id="calendarPage" class="content-page hidden">
+            <div class="page-header">
+                <div>
+                    <h1>📅 Money Calendar</h1>
+                    <p>Select a date to see your income and expenses.</p>
+                </div>
+            </div>
+            <div class="form-card">
+                <label>Select Date</label>
+                <input type="date" id="calendarDate">
+            </div>
+            <div class="section-card">
+                <div id="calendarSummary" class="calendar-summary"></div>
+                <div id="calendarTransactions" class="transaction-list"></div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             FEEDBACK
+        =========================================== -->
+        <section id="feedbackPage" class="content-page hidden">
+            <div class="page-header">
+                <div>
+                    <h1>💬 Feedback</h1>
+                    <p>Help make Student Finance Tracker better.</p>
+                </div>
+            </div>
+            <div class="feedback-hero">
+                <div class="feedback-emoji">💡</div>
+                <h2>Your opinion matters</h2>
+                <p>Tell us what you like, what is confusing, or what feature you want next.</p>
+            </div>
+            <div class="form-card">
+                <form id="feedbackForm">
+                    <label>Feedback Type</label>
+                    <select id="feedbackType" required>
+                        <option value="">Choose one</option>
+                        <option>💡 Feature suggestion</option>
+                        <option>🐛 Report a problem</option>
+                        <option>📱 Mobile experience</option>
+                        <option>🤖 Finance AI suggestion</option>
+                        <option>🎨 Design suggestion</option>
+                        <option>❤️ General feedback</option>
+                    </select>
+                    <label>Rating</label>
+                    <select id="feedbackRating" required>
+                        <option value="">Choose a rating</option>
+                        <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                        <option value="4">⭐⭐⭐⭐ Very good</option>
+                        <option value="3">⭐⭐⭐ Good</option>
+                        <option value="2">⭐⭐ Needs improvement</option>
+                        <option value="1">⭐ Poor</option>
+                    </select>
+                    <label>Your feedback</label>
+                    <textarea id="feedbackMessage" rows="6" placeholder="Tell us what you think..." required></textarea>
+                    <button type="submit">Send Feedback 💬</button>
+                </form>
+            </div>
+            <div class="section-card">
+                <h2>📨 Feedback delivery</h2>
+                <p class="muted">The Send button can open your email app with the feedback filled in. You only need to add your email address in one place in <code>script.js</code>.</p>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             PROFILE
+        =========================================== -->
+
+        <section
+            id="profilePage"
+            class="content-page hidden"
+        >
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        👤 Profile
+                    </h1>
+
+                    <p>
+                        Manage your personal information.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card">
+
+                <label>
+                    Name
+                </label>
+
+                <input
+                    type="text"
+                    id="profileName"
+                >
+
+
+                <label>
+                    College
+                </label>
+
+                <input
+                    type="text"
+                    id="profileCollege"
+                >
+
+
+                <button id="saveProfile">
+                    Save Profile
+                </button>
+
+            </div>
+
+        </section>
+
+
+    </main>
+    <!-- ==========================================
+     FINANCE AI
+=========================================== -->
+
+<section
+    id="aiPage"
+    class="content-page hidden"
+>
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                ✨ Finance AI
+            </h1>
+
+            <p>
+                Ask questions about your personal finances.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="ai-card">
+
+        <div class="ai-header">
+
+            <div class="ai-icon">
+                🤖
+            </div>
+
+            <div>
+
+                <h2>
+                    Finance Assistant
+                </h2>
+
+                <p>
+                    I can analyze your income,
+                    expenses and money lent.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="ai-suggestions">
+
+            <button
+                class="suggestion"
+                data-question="Where am I spending the most?"
+            >
+                💸 Where am I spending the most?
+            </button>
+
+
+            <button
+                class="suggestion"
+                data-question="How much did I spend this month?"
+            >
+                📊 How much did I spend this month?
+            </button>
+
+
+            <button
+                class="suggestion"
+                data-question="How much money do I have?"
+            >
+                💰 How much money do I have?
+            </button>
+
+
+            <button
+                class="suggestion"
+                data-question="Am I spending too much?"
+            >
+                ⚠️ Am I spending too much?
+            </button>
+
+        </div>
+
+
+        <div
+            id="aiChat"
+            class="ai-chat"
+        >
+
+            <div class="ai-message">
+
+                🤖 Hello! I'm your Finance AI.
+
+                <br><br>
+
+                Ask me anything about your
+                income, expenses, savings or debt.
+
+            </div>
+
+        </div>
+
+
+        <div class="ai-input-area">
+
+            <input
+                type="text"
+                id="aiInput"
+                placeholder="Ask something about your finances..."
+            >
+
+            <button
+                id="askAI"
+            >
+                Ask ✨
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
