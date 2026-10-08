@@ -12,10 +12,6 @@ let expenses =
         localStorage.getItem("expenses")
     ) || [];
 
-let transactions =
-    JSON.parse(
-        localStorage.getItem("transactions")
-    ) || [];
 
 let incomes =
     JSON.parse(
@@ -300,8 +296,6 @@ function showPage(pageId) {
 
     displayDebts();
 
-    displayTransactions();
-
     updateAnalysis();
 
 }
@@ -404,27 +398,19 @@ document
             }
 
 
-    expenses.push({
-    id: Date.now(),
-    category: category,
-    amount: amount,
-    date: date,
-    description: description
-});
+            expenses.push({
 
-// Create transaction record
-transactions.push({
-    id: Date.now(),
-    type: "expense",
-    amount: amount,
-    category: category,
-    description: description,
-    date: date,
-    time: new Date().toLocaleTimeString("en-IN"),
-    paymentMethod: "Manual",
-    source: "Manual",
-    status: "Completed"
-});
+                id: Date.now(),
+
+                category: category,
+
+                amount: amount,
+
+                date: date,
+
+                description: description
+
+            });
 
 
             saveData();
@@ -510,30 +496,7 @@ document
                 description: description
 
             });
-        // Create transaction record
-transactions.push({
 
-    id: Date.now(),
-
-    type: "income",
-
-    amount: amount,
-
-    category: category,
-
-    description: description,
-
-    date: date,
-
-    time: new Date().toLocaleTimeString("en-IN"),
-
-    paymentMethod: "Manual",
-
-    source: "Manual",
-
-    status: "Completed"
-
-});    
 
             saveData();
 
@@ -671,10 +634,6 @@ function saveData() {
         JSON.stringify(debts)
     );
 
-    localStorage.setItem(
-    "transactions",
-    JSON.stringify(transactions)
-);
 }
 
 
@@ -925,300 +884,8 @@ function updateDashboard() {
 
     displayRecentActivity();
 
-    updateCharts();
-
 }
-// ==================================================
-// PREMIUM FINANCE CHARTS
-// ==================================================
 
-let incomeExpenseChartInstance = null;
-let categoryChartInstance = null;
-
-function updateCharts() {
-
-    const incomeCanvas =
-        document.getElementById("incomeExpenseChart");
-
-    const categoryCanvas =
-        document.getElementById("categoryChart");
-
-    if (!incomeCanvas || !categoryCanvas) {
-        return;
-    }
-
-
-    // ================================
-    // INCOME VS EXPENSES
-    // ================================
-
-    if (incomeExpenseChartInstance) {
-        incomeExpenseChartInstance.destroy();
-    }
-
-    incomeExpenseChartInstance = new Chart(
-        incomeCanvas,
-        {
-            type: "bar",
-
-            data: {
-
-                labels: [
-                    "Income",
-                    "Expenses"
-                ],
-
-                datasets: [
-                    {
-                        data: [
-                            incomeTotal(),
-                            expenseTotal()
-                        ],
-
-                        backgroundColor: [
-                            "#d4af37",
-                            "#8fa99d"
-                        ],
-
-                        borderColor: [
-                            "#f0d878",
-                            "#b8c9c1"
-                        ],
-
-                        borderWidth: 1,
-
-                        borderRadius: 8,
-
-                        barThickness: 55
-                    }
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    legend: {
-                        display: false
-                    },
-
-                    tooltip: {
-
-                        callbacks: {
-
-                            label: function(context) {
-
-                                return " " +
-                                    money(
-                                        context.raw
-                                    );
-
-                            }
-
-                        }
-
-                    }
-
-                },
-
-                scales: {
-
-                    x: {
-
-                        grid: {
-                            display: false
-                        },
-
-                        ticks: {
-                            color: "#a8b5ae",
-
-                            font: {
-                                weight: "600"
-                            }
-                        }
-
-                    },
-
-                    y: {
-
-                        beginAtZero: true,
-
-                        grid: {
-                            color:
-                                "rgba(212,175,55,0.08)"
-                        },
-
-                        ticks: {
-
-                            color: "#a8b5ae",
-
-                            callback:
-                                function(value) {
-
-                                    return "₹" +
-                                        value.toLocaleString(
-                                            "en-IN"
-                                        );
-
-                                }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-    );
-
-
-    // ================================
-    // SPENDING BY CATEGORY
-    // ================================
-
-    const categoryTotals = {};
-
-    expenses.forEach(
-        function(expense) {
-
-            if (
-                !categoryTotals[
-                    expense.category
-                ]
-            ) {
-
-                categoryTotals[
-                    expense.category
-                ] = 0;
-
-            }
-
-            categoryTotals[
-                expense.category
-            ] += Number(
-                expense.amount
-            );
-
-        }
-    );
-
-
-    const categoryLabels =
-        Object.keys(categoryTotals);
-
-    const categoryValues =
-        categoryLabels.map(
-            function(category) {
-
-                return categoryTotals[
-                    category
-                ];
-
-            }
-        );
-
-
-    if (categoryChartInstance) {
-        categoryChartInstance.destroy();
-    }
-
-
-    categoryChartInstance = new Chart(
-        categoryCanvas,
-        {
-            type: "doughnut",
-
-            data: {
-
-                labels: categoryLabels,
-
-                datasets: [
-                    {
-
-                        data: categoryValues,
-
-                        backgroundColor: [
-                            "#d4af37",
-                            "#8fa99d",
-                            "#5f806f",
-                            "#f0d878",
-                            "#294f40",
-                            "#b8c9c1"
-                        ],
-
-                        borderColor: "#0b1f17",
-
-                        borderWidth: 3,
-
-                        hoverOffset: 8
-
-                    }
-                ]
-
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                cutout: "68%",
-
-                plugins: {
-
-                    legend: {
-
-                        position: "bottom",
-
-                        labels: {
-
-                            color: "#a8b5ae",
-
-                            padding: 16,
-
-                            usePointStyle: true,
-
-                            pointStyle: "circle"
-
-                        }
-
-                    },
-
-                    tooltip: {
-
-                        callbacks: {
-
-                            label:
-                                function(context) {
-
-                                    return " " +
-                                        context.label +
-                                        ": " +
-                                        money(
-                                            context.raw
-                                        );
-
-                                }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-    );
-
-}
 
 // ==================================================
 // RECENT ACTIVITY
@@ -1360,88 +1027,7 @@ function displayRecentActivity() {
     );
 
 }
-// ==================================================
-// DISPLAY TRANSACTIONS
-// ==================================================
 
-function displayTransactions() {
-
-    const container =
-        document.getElementById(
-            "transactionsList"
-        );
-
-    if (!container) {
-        return;
-    }
-
-    if (transactions.length === 0) {
-
-        container.innerHTML =
-            '<p class="empty">No transactions yet.</p>';
-
-        return;
-
-    }
-
-    container.innerHTML = "";
-
-    transactions
-        .slice()
-        .sort(function(a, b) {
-
-            return (
-                new Date(b.date) -
-                new Date(a.date)
-            );
-
-        })
-        .forEach(function(transaction) {
-
-            const item =
-                document.createElement("div");
-
-            item.className =
-                "activity-item";
-
-            const sign =
-                transaction.type === "income"
-                ? "+"
-                : "-";
-
-            const textClass =
-                transaction.type === "income"
-                ? "income-text"
-                : "expense-text";
-
-            item.innerHTML = `
-
-                <div>
-
-                    <div class="activity-title">
-                        ${transaction.category}
-                    </div>
-
-                    <div class="activity-date">
-                        ${transaction.description || "No description"}
-                        <br>
-                        ${transaction.date}
-                        · ${transaction.source || "Manual"}
-                    </div>
-
-                </div>
-
-                <div class="${textClass}">
-                    ${sign}${money(transaction.amount)}
-                </div>
-
-            `;
-
-            container.appendChild(item);
-
-        });
-
-}    
 
 // ==================================================
 // DISPLAY DEBTS
